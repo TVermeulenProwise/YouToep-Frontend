@@ -8,11 +8,11 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
     public points = 1;
     public players: SimplePlayer[] = [];
     public lastKnockPlayerName = "";
-    
+
     public constructor(public eventEmitter: (event: events) => void = () => {}) {}
 
     public inKnockState(): boolean {
-        return this.players.some(p => 
+        return this.players.some(p =>
             p.knockStatus == KnockStatus.InWait
             || p.knockStatus === KnockStatus.Continue
             || p.knockStatus === KnockStatus.Pass
@@ -71,7 +71,7 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
                     ? KnockStatus.Continue
                     : KnockStatus.InWait;
             });
-        
+
         this.lastKnockPlayerName = player.name;
         this.updateKnock();
     }
@@ -126,7 +126,7 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
             .forEach((p) => {
                 p.points = Math.min(p.points + this.points, this.maxPoints);
             });
-        
+
         // Reset States for a new round.
         this.players.forEach((p) => {
                 p.knockStatus = p.points >= this.maxPoints

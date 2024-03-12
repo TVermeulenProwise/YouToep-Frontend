@@ -15,7 +15,7 @@ export const ManualList: FC<{
         if (player.knockStatus !== KnockStatus.Out) {
             localPoints += game.points;
         }
-        
+
         if (localPoints === 9) {
             return "rgb(245, 182, 88)";
         } else if (localPoints >= 10) {
@@ -76,6 +76,7 @@ export const ManualList: FC<{
                                         onClick={() => {
                                             p.knockStatus = KnockStatus.Continue;
                                             game.updateKnock();
+                                            game.players = game.players;
                                         }}>
                                             Continue
                                         </Button>
@@ -87,6 +88,7 @@ export const ManualList: FC<{
                                         onClick={() => {
                                             p.knockStatus = KnockStatus.Pass;
                                             game.updateKnock();
+                                            game.players = game.players;
                                         }}>
                                             Pass
                                         </Button>
@@ -104,6 +106,7 @@ export const ManualList: FC<{
                                         onClick={() => {
                                             p.knockStatus = KnockStatus.InWait;
                                             game.updateKnock();
+                                            game.players = game.players;
                                         }}>
                                             Cancel {p.knockStatus === KnockStatus.Continue ? "continue" : "pass"}
                                         </Button>}
