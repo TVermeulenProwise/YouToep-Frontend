@@ -93,7 +93,6 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
         });
 
         this.points++;
-        this.lastKnockPlayerName = "";
         this.checkWinner();
     }
 
@@ -148,6 +147,8 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
         }
 
         this.eventEmitter?.("endRound");
+
+        this.lastKnockPlayerName = "";
 
         const max = this.players.map((p) => p.points)
             .filter((p) => p < this.maxPoints)
