@@ -93,6 +93,7 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
         });
 
         this.points++;
+        this.lastKnockPlayerName = "";
         this.checkWinner();
     }
 
