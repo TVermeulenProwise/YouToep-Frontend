@@ -12,6 +12,7 @@ export interface GameInterface<TPlayer extends SimplePlayer> {
     knock: (player: TPlayer) => void;
     updateKnock: () => void;
     cancelKnock: () => void;
+    checkPoverty: () => void;
     inKnockState: () => boolean;
 
     winner: (player: TPlayer) => void;

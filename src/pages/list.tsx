@@ -5,6 +5,7 @@ import { ReactObject } from "../models/ReactObject";
 import { SimpleGame } from "../models/SimpleGame";
 import { ManualList } from "../components/manualList";
 import { SimplePlayer } from "../models/SimplePlayer";
+import { RemovePlayerDialog } from "../components/dialog/RemovePlayerDialog";
 
 export const ListPage: FC = () => {
     const game = ReactObject.formState(new SimpleGame());
@@ -45,11 +46,7 @@ export const ListPage: FC = () => {
             knownPlayerNames={game.players.map(p => p.name)}
             onNewPlayer={game.addPlayerFromName.bind(game)}
         ></PlayerInput>
-        <ManualList game={game} tableClick={(player: SimplePlayer, column: string) => {
-            if (column === "points") {
-                changeValue(player);
-            }
-        }}></ManualList>
+        <ManualList game={game}></ManualList>
         { valueOfUser !== undefined && selectedUser !== undefined &&
             <div className="valueChanger">
                 <div>

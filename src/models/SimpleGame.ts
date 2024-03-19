@@ -40,11 +40,6 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
     };
 
     public removePlayer(name: string) {
-        const response = confirm(`Are you sure you want to remove ${name}`);
-        if (!response) {
-            return;
-        }
-
         const index = this.players.findIndex((p) => p.name === name);
         this.players.splice(index, 1);
 
@@ -107,8 +102,18 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
         });
 
         this.lastKnockPlayerName = "";
-        if (this.points > 1) {
-            this.points--;
+    }
+
+    public checkPoverty() {
+        if (this.inKnockState() || this.points > 1) {
+            return;
+        }
+
+        const max = this.players.map((p) => p.points)
+            .filter((p) => p < this.maxPoints)
+            .reduce((p1, p2) => Math.max(p1, p2));
+        if (max === 9) {
+            this.knock({} as unknown as SimplePlayer);
         }
     }
 
@@ -150,12 +155,7 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
 
         this.lastKnockPlayerName = "";
 
-        const max = this.players.map((p) => p.points)
-            .filter((p) => p < this.maxPoints)
-            .reduce((p1, p2) => Math.max(p1, p2));
-        if (max === 9) {
-            this.knock({} as unknown as SimplePlayer);
-        }
+        this.checkPoverty();
     }
 
     public checkWinner() {

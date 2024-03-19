@@ -1,13 +1,22 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Button, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
 import { KnockStatus, SimplePlayer } from "../models/SimplePlayer";
 import { GameInterface } from "../models/GameInterface";
+import { RemovePlayerDialog } from "./dialog/RemovePlayerDialog";
+import { UpdatePlayerPointsDialog } from "./dialog/UpdatePlayerPointsDialog";
 
 export const ManualList: FC<{
     game: GameInterface<SimplePlayer>,
-    tableClick: (player: SimplePlayer, column: string) => void
 }> = (args) => {
     const { game } = args;
+
+    const [activeDialog, activeDialogSetter] = useState<"" | "remove" | "update">("");
+    const [playerName, playerNameSet] = useState<string | undefined>(undefined)
+
+    const resetActiveDialog = () => {
+        playerNameSet(undefined);
+        activeDialogSetter("");
+    }
 
     const getColor = (player: SimplePlayer): string | undefined => {
         if (player.points === game.maxPoints) return "gray";
@@ -35,10 +44,13 @@ export const ManualList: FC<{
                         <TableRow key={`${p.name}-manual-list-row`} style={{
                             backgroundColor: getColor(p),
                         }}>
-                            <TableCell onClick={() => args.tableClick(p, "name")}>
+                            <TableCell>
                                 {p.name}
                             </TableCell>
-                            <TableCell onClick={() => args.tableClick(p, "points")}>
+                            <TableCell onClick={() => {
+                                activeDialogSetter("update");
+                                playerNameSet(p.name);
+                            }}>
                                 {p.points}/{game.maxPoints}
                             </TableCell>
                             {!game.inKnockState() && <>
@@ -117,7 +129,10 @@ export const ManualList: FC<{
                                 <Button
                                 variant="outlined"
                                 color="warning"
-                                onClick={() => game.removePlayer(p.name)}>
+                                onClick={() => {
+                                    activeDialogSetter("remove");
+                                    playerNameSet(p.name);
+                                }}>
                                     Remove
                                 </Button>
                             </TableCell>
@@ -127,5 +142,7 @@ export const ManualList: FC<{
             </Table>
         </TableContainer>
     </div>
+    <RemovePlayerDialog game={game} playerName={playerName ?? ""} open={activeDialog == "remove"} onClose={resetActiveDialog}></RemovePlayerDialog>
+    <UpdatePlayerPointsDialog game={game} playerName={playerName ?? ""} open={activeDialog == "update"} onClose={resetActiveDialog}></UpdatePlayerPointsDialog>
     </>
 }
