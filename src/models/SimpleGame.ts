@@ -140,6 +140,8 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
             });
         this.points = 1;
 
+        this.lastKnockPlayerName = "";
+
         const remainingPlayers = this.players.filter((p) => p.points < this.maxPoints);
         if (remainingPlayers.length <= 1) {
             this.players.forEach((p) => {
@@ -152,8 +154,6 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
         }
 
         this.eventEmitter?.("endRound");
-
-        this.lastKnockPlayerName = "";
 
         this.checkPoverty();
     }
