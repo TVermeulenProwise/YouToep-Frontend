@@ -6,38 +6,22 @@ import { SimpleGame } from "../models/SimpleGame";
 import { ManualList } from "../components/manualList";
 import { SimplePlayer } from "../models/SimplePlayer";
 import { RemovePlayerDialog } from "../components/dialog/RemovePlayerDialog";
+import { PromptDialog } from "../components/dialog/PromptDialog";
 
 export const ListPage: FC = () => {
     const game = ReactObject.formState(new SimpleGame());
 
-    game.eventEmitter = (event) => {
-        game.players = game.players;
+    const [activeDialog, activeDialogSetter] = useState<"" | "endRound" | "endGame">("");
+    const [player, setPlayer] = useState<SimplePlayer | undefined>(undefined);
+
+    const resetActiveDialog = () => {
+        setPlayer(undefined);
+        activeDialogSetter("");
     }
 
-    const [selectedUser, setSelectedUser] = useState(undefined as SimplePlayer | undefined);
-    const [valueOfUser, setValueOfUser] = useState(undefined as number | undefined);
-
-    const changeValue = (player: SimplePlayer) => {
-        setValueOfUser(player.points);
-        setSelectedUser(player);
-    }
-    const setChangedValue = () => {
-        if (valueOfUser === undefined || !selectedUser) throw new Error();
-        selectedUser.points = Number.isNaN(valueOfUser) ? 0 : valueOfUser;
-        if (game.inKnockState() && game.lastKnockPlayerName === undefined) {
-            game.cancelKnock();
-        }
-        const max = game.players.map(p => p.points).filter(p => p < game.maxPoints).reduce((p1, p2) => Math.max(p1, p2));
-        if (max === (game.maxPoints - 1)) {
-            game.knock({} as unknown as SimplePlayer);
-        }
-        setSelectedUser(undefined);
-        setSelectedUser(undefined);
-    }
-    const cancelValueChange = () => {
-        if (valueOfUser === undefined || !selectedUser) throw new Error();
-        setSelectedUser(undefined);
-        setValueOfUser(undefined);
+    game.eventEmitter = (event, player) => {
+        activeDialogSetter(event);
+        setPlayer({...player});
     }
 
     return (
@@ -47,23 +31,15 @@ export const ListPage: FC = () => {
             onNewPlayer={game.addPlayerFromName.bind(game)}
         ></PlayerInput>
         <ManualList game={game}></ManualList>
-        { valueOfUser !== undefined && selectedUser !== undefined &&
-            <div className="valueChanger">
-                <div>
-                    <input
-                        type="number"
-                        min={0}
-                        max={game.maxPoints}
-                        value={valueOfUser}
-                        onChange={(event) => setValueOfUser(Math.max(0, Math.min(Number.parseInt(event.target.value), 10))) }
-                        onKeyDown={(event) => {if (event.key === "Enter") setChangedValue();}}
-                    />
-                    <div className="verticalFlex">
-                        <Button color="primary" variant="contained" onClick={setChangedValue}>Change</Button>
-                        <Button color="primary" variant="outlined" onClick={cancelValueChange}>Cancel</Button>
-                    </div>
-                </div>
-            </div>
-        }
+        <PromptDialog
+            title={`🎉 ${player?.name} won the round 🎉`}
+            text={""}
+            onClose={resetActiveDialog}
+            open={activeDialog === "endRound"}></PromptDialog>
+        <PromptDialog
+            title={`👑 ${player?.name} is the winner 👑`}
+            text={`${player?.name} won the game with only ${player?.points} points.`}
+            onClose={resetActiveDialog}
+            open={activeDialog === "endGame"}></PromptDialog>
     </>)
 }

@@ -9,7 +9,7 @@ import {
 
 export const RemovePlayerDialog: FC<{
     game: GameInterface<SimplePlayer>,
-    onClose: () => void
+    onClose: () => void,
     playerName: string,
     open?: boolean,
 }> = (args) => {
@@ -18,27 +18,25 @@ export const RemovePlayerDialog: FC<{
         <Dialog open={args.open ?? false} onClose={args.onClose} PaperProps={{style: { backgroundColor: "antiquewhite" }}}>
             <DialogTitle align={"center"}>Are you sure you want to remove "{args.playerName}"</DialogTitle>
             <DialogContent>
-                <center>
-                    <ButtonGroup>
-                        <Button
-                            color={"primary"}
-                            variant={"contained"}
-                            onClick={args.onClose}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            color={"warning"}
-                            variant={"outlined"}
-                            onClick={() => {
-                                args.game.removePlayer(args.playerName);
-                                args.onClose();
-                            }}
-                        >
-                            Remove
-                        </Button>
-                    </ButtonGroup>
-                </center>
+                <ButtonGroup fullWidth={true}>
+                    <Button
+                        color={"primary"}
+                        variant={"contained"}
+                        onClick={args.onClose}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        color={"warning"}
+                        variant={"outlined"}
+                        onClick={() => {
+                            args.game.removePlayer(args.playerName);
+                            args.onClose();
+                        }}
+                    >
+                        Remove
+                    </Button>
+                </ButtonGroup>
             </DialogContent>
         </Dialog>
     )

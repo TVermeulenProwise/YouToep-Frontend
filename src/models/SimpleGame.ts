@@ -9,7 +9,7 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
     public players: SimplePlayer[] = [];
     public lastKnockPlayerName = "";
 
-    public constructor(public eventEmitter: (event: events) => void = () => {}) {}
+    public constructor(public eventEmitter: (event: events, player: SimplePlayer) => void = () => {}) {}
 
     public inKnockState(): boolean {
         return this.players.some(p =>
@@ -144,16 +144,17 @@ export class SimpleGame implements GameInterface<SimplePlayer> {
 
         const remainingPlayers = this.players.filter((p) => p.points < this.maxPoints);
         if (remainingPlayers.length <= 1) {
+            this.eventEmitter?.("endGame", player);
+
             this.players.forEach((p) => {
                 p.points = 0;
                 p.knockStatus = KnockStatus.None;
             });
 
-            this.eventEmitter?.("endGame");
             return;
         }
 
-        this.eventEmitter?.("endRound");
+        this.eventEmitter?.("endRound", player);
 
         this.checkPoverty();
     }

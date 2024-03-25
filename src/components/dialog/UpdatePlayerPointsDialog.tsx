@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Dialog, DialogContent, DialogTitle } from "@mui/ma
 
 export const UpdatePlayerPointsDialog: FC<{
     game: GameInterface<SimplePlayer>,
-    onClose: () => void
+    onClose: () => void,
     playerName: string,
     open?: boolean,
 }> = (args) => {
@@ -63,7 +63,6 @@ export const UpdatePlayerPointsDialog: FC<{
                     value={points}
                     style={{
                         width: "100%",
-                        marginBottom: ""
                     }}
                     autoFocus={true}
                     onChange={(event) => {
@@ -75,24 +74,22 @@ export const UpdatePlayerPointsDialog: FC<{
                         }
                     }}
                 />
-                <center>
-                    <ButtonGroup>
-                        <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={args.onClose}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            color="warning"
-                            variant="outlined"
-                            onClick={args.onClose}
-                        >
-                            Update
-                        </Button>
-                    </ButtonGroup>
-                </center>
+                <ButtonGroup fullWidth={true}>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={args.onClose}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        color="warning"
+                        variant="outlined"
+                        onClick={args.onClose}
+                    >
+                        Update
+                    </Button>
+                </ButtonGroup>
             </DialogContent>
         </Dialog>
     )
